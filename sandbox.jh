@@ -1,0 +1,85 @@
+
+application {
+  config {
+    baseName hr
+    applicationType monolith
+    packageName org.somesandwich
+    authenticationType jwt
+    devDatabaseType postgresql
+    prodDatabaseType postgresql
+    buildTool maven
+    serverPort 8080
+    clientFramework angular
+    testFrameworks [cypress]
+    searchEngine elasticsearch
+  }
+  entities *
+}
+
+paginate * with pagination
+service * with serviceClass
+
+entity Employee {
+  @Id employeeId Long
+  firstName String
+  lastName String
+  email String
+  phoneNumber String
+  hireDate Date
+  salary Long
+  commissionPct Long
+}
+
+entity Job {
+  @Id jobId String
+  jobTitle String
+  minSalary Long
+  maxSalary Long
+}
+
+entity JobHistory {
+  employeeId Long
+  startDate Date
+  endDate Date
+  salary Long
+}
+
+entity Department {
+  @Id departmentId Long
+  departmentName String
+}
+
+entity Location {
+  @Id locationId Long
+  streetAddress String
+  postalCode String
+  city String
+  stateProvince String
+}
+
+entity Country {
+  @Id countryId String
+  countryName String
+}
+
+entity Region {
+  @Id regionId Long
+  regionName String
+}
+
+relationship OneToMany {
+  Job{Employees} to Employee{Job}
+  Employee{SubEmployees} to Employee{Manager}
+  Department{Employees} to Employee{Department}
+
+  Job{JobHistories} to JobHistory{Job}
+  Department{JobHistories} to JobHistory{Department}
+  Employee{JobHistories} to JobHistory{Employee}
+
+  Employee{ManagedDepartments} to Department{Manager}
+  Location{Departments} to Department{Location}
+
+  Country{Locations} to Location{Country}
+
+  Region{Countries} to Country{Region}
+}

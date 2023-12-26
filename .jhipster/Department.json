@@ -1,0 +1,53 @@
+{
+  "annotations": {
+    "changelogDate": "20231226081849"
+  },
+  "applications": ["hr"],
+  "entityTableName": "department",
+  "fields": [
+    {
+      "fieldName": "departmentId",
+      "fieldType": "Long",
+      "options": {
+        "id": true
+      }
+    },
+    {
+      "fieldName": "departmentName",
+      "fieldType": "String"
+    }
+  ],
+  "name": "Department",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "employee",
+      "otherEntityRelationshipName": "department",
+      "relationshipName": "employees",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "jobHistory",
+      "otherEntityRelationshipName": "department",
+      "relationshipName": "jobHistories",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "employee",
+      "otherEntityRelationshipName": "managedDepartments",
+      "relationshipName": "manager",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "location",
+      "otherEntityRelationshipName": "departments",
+      "relationshipName": "location",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "serviceClass"
+}

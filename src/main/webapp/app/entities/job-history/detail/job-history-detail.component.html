@@ -1,0 +1,70 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (jobHistory) {
+      <div>
+        <h2 data-cy="jobHistoryDetailsHeading"><span jhiTranslate="hrApp.jobHistory.detail.title">Job History</span></h2>
+
+        <hr />
+
+        <jhi-alert-error></jhi-alert-error>
+
+        <jhi-alert></jhi-alert>
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ jobHistory.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="hrApp.jobHistory.employeeId">Employee Id</span></dt>
+          <dd>
+            <span>{{ jobHistory.employeeId }}</span>
+          </dd>
+          <dt><span jhiTranslate="hrApp.jobHistory.startDate">Start Date</span></dt>
+          <dd>
+            <span>{{ jobHistory.startDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="hrApp.jobHistory.endDate">End Date</span></dt>
+          <dd>
+            <span>{{ jobHistory.endDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="hrApp.jobHistory.salary">Salary</span></dt>
+          <dd>
+            <span>{{ jobHistory.salary }}</span>
+          </dd>
+          <dt><span jhiTranslate="hrApp.jobHistory.job">Job</span></dt>
+          <dd>
+            @if (jobHistory.job) {
+              <div>
+                <a [routerLink]="['/job', jobHistory.job.jobId, 'view']">{{ jobHistory.job.jobId }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="hrApp.jobHistory.department">Department</span></dt>
+          <dd>
+            @if (jobHistory.department) {
+              <div>
+                <a [routerLink]="['/department', jobHistory.department.departmentId, 'view']">{{ jobHistory.department.departmentId }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="hrApp.jobHistory.employee">Employee</span></dt>
+          <dd>
+            @if (jobHistory.employee) {
+              <div>
+                <a [routerLink]="['/employee', jobHistory.employee.employeeId, 'view']">{{ jobHistory.employee.employeeId }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/job-history', jobHistory.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

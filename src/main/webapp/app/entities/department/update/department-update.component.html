@@ -1,0 +1,90 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-department-heading" data-cy="DepartmentCreateUpdateHeading" jhiTranslate="hrApp.department.home.createOrEditLabel">
+        Create or edit a Department
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        @if (editForm.controls.departmentId.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" jhiTranslate="hrApp.department.departmentId" for="field_departmentId">Department Id</label>
+            <input
+              type="number"
+              class="form-control"
+              name="departmentId"
+              id="field_departmentId"
+              data-cy="departmentId"
+              formControlName="departmentId"
+              [readonly]="true"
+            />
+          </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="hrApp.department.departmentName" for="field_departmentName">Department Name</label>
+          <input
+            type="text"
+            class="form-control"
+            name="departmentName"
+            id="field_departmentName"
+            data-cy="departmentName"
+            formControlName="departmentName"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="hrApp.department.manager" for="field_manager">Manager</label>
+          <select
+            class="form-control"
+            id="field_manager"
+            data-cy="manager"
+            name="manager"
+            formControlName="manager"
+            [compareWith]="compareEmployee"
+          >
+            <option [ngValue]="null"></option>
+            @for (employeeOption of employeesSharedCollection; track $index) {
+              <option [ngValue]="employeeOption">{{ employeeOption.employeeId }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="hrApp.department.location" for="field_location">Location</label>
+          <select
+            class="form-control"
+            id="field_location"
+            data-cy="location"
+            name="location"
+            formControlName="location"
+            [compareWith]="compareLocation"
+          >
+            <option [ngValue]="null"></option>
+            @for (locationOption of locationsSharedCollection; track $index) {
+              <option [ngValue]="locationOption">{{ locationOption.locationId }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,39 @@
+{
+  "annotations": {
+    "changelogDate": "20231226082049"
+  },
+  "applications": ["hr"],
+  "entityTableName": "country",
+  "fields": [
+    {
+      "fieldName": "countryId",
+      "fieldType": "String",
+      "options": {
+        "id": true
+      }
+    },
+    {
+      "fieldName": "countryName",
+      "fieldType": "String"
+    }
+  ],
+  "name": "Country",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "location",
+      "otherEntityRelationshipName": "country",
+      "relationshipName": "locations",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "region",
+      "otherEntityRelationshipName": "countries",
+      "relationshipName": "region",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "serviceClass"
+}

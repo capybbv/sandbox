@@ -1,0 +1,82 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (employee) {
+      <div>
+        <h2 data-cy="employeeDetailsHeading"><span jhiTranslate="hrApp.employee.detail.title">Employee</span></h2>
+
+        <hr />
+
+        <jhi-alert-error></jhi-alert-error>
+
+        <jhi-alert></jhi-alert>
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="hrApp.employee.employeeId">Employee Id</span></dt>
+          <dd>
+            <span>{{ employee.employeeId }}</span>
+          </dd>
+          <dt><span jhiTranslate="hrApp.employee.firstName">First Name</span></dt>
+          <dd>
+            <span>{{ employee.firstName }}</span>
+          </dd>
+          <dt><span jhiTranslate="hrApp.employee.lastName">Last Name</span></dt>
+          <dd>
+            <span>{{ employee.lastName }}</span>
+          </dd>
+          <dt><span jhiTranslate="hrApp.employee.email">Email</span></dt>
+          <dd>
+            <span>{{ employee.email }}</span>
+          </dd>
+          <dt><span jhiTranslate="hrApp.employee.phoneNumber">Phone Number</span></dt>
+          <dd>
+            <span>{{ employee.phoneNumber }}</span>
+          </dd>
+          <dt><span jhiTranslate="hrApp.employee.hireDate">Hire Date</span></dt>
+          <dd>
+            <span>{{ employee.hireDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="hrApp.employee.salary">Salary</span></dt>
+          <dd>
+            <span>{{ employee.salary }}</span>
+          </dd>
+          <dt><span jhiTranslate="hrApp.employee.commissionPct">Commission Pct</span></dt>
+          <dd>
+            <span>{{ employee.commissionPct }}</span>
+          </dd>
+          <dt><span jhiTranslate="hrApp.employee.job">Job</span></dt>
+          <dd>
+            @if (employee.job) {
+              <div>
+                <a [routerLink]="['/job', employee.job.jobId, 'view']">{{ employee.job.jobId }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="hrApp.employee.manager">Manager</span></dt>
+          <dd>
+            @if (employee.manager) {
+              <div>
+                <a [routerLink]="['/employee', employee.manager.employeeId, 'view']">{{ employee.manager.employeeId }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="hrApp.employee.department">Department</span></dt>
+          <dd>
+            @if (employee.department) {
+              <div>
+                <a [routerLink]="['/department', employee.department.departmentId, 'view']">{{ employee.department.departmentId }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/employee', employee.employeeId, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,32 @@
+{
+  "annotations": {
+    "changelogDate": "20231226082149"
+  },
+  "applications": ["hr"],
+  "entityTableName": "region",
+  "fields": [
+    {
+      "fieldName": "regionId",
+      "fieldType": "Long",
+      "options": {
+        "id": true
+      }
+    },
+    {
+      "fieldName": "regionName",
+      "fieldType": "String"
+    }
+  ],
+  "name": "Region",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "country",
+      "otherEntityRelationshipName": "region",
+      "relationshipName": "countries",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "service": "serviceClass"
+}

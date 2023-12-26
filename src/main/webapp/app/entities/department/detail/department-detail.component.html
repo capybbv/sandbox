@@ -1,0 +1,50 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (department) {
+      <div>
+        <h2 data-cy="departmentDetailsHeading"><span jhiTranslate="hrApp.department.detail.title">Department</span></h2>
+
+        <hr />
+
+        <jhi-alert-error></jhi-alert-error>
+
+        <jhi-alert></jhi-alert>
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="hrApp.department.departmentId">Department Id</span></dt>
+          <dd>
+            <span>{{ department.departmentId }}</span>
+          </dd>
+          <dt><span jhiTranslate="hrApp.department.departmentName">Department Name</span></dt>
+          <dd>
+            <span>{{ department.departmentName }}</span>
+          </dd>
+          <dt><span jhiTranslate="hrApp.department.manager">Manager</span></dt>
+          <dd>
+            @if (department.manager) {
+              <div>
+                <a [routerLink]="['/employee', department.manager.employeeId, 'view']">{{ department.manager.employeeId }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="hrApp.department.location">Location</span></dt>
+          <dd>
+            @if (department.location) {
+              <div>
+                <a [routerLink]="['/location', department.location.locationId, 'view']">{{ department.location.locationId }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/department', department.departmentId, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>
