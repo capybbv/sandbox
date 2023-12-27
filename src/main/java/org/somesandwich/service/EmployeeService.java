@@ -17,6 +17,7 @@ import org.somesandwich.repository.JobHistoryRepository;
 import org.somesandwich.repository.JobRepository;
 import org.somesandwich.repository.search.EmployeeSearchRepository;
 import org.somesandwich.repository.search.JobHistorySearchRepository;
+import org.somesandwich.service.dto.EmployeeDetailDTO;
 import org.somesandwich.service.dto.UpdateJobEmployeeDTO;
 import org.somesandwich.web.rest.errors.BadRequestAlertException;
 import org.springframework.data.domain.Page;
@@ -230,6 +231,32 @@ public class EmployeeService {
     public Optional<Employee> findOne(Long id) {
         log.debug("Request to get Employee : {}", id);
         return employeeRepository.findById(id);
+    }
+
+    public Optional<EmployeeDetailDTO> findOneByEmployeeId(Long id) {
+        log.debug("Request to get Employee : {}", id);
+        Optional<Employee> emp = employeeRepository.findById(id);
+
+        if (emp.isPresent()) {
+            throw new BadRequestAlertException("Entity not found", "Employee", "idnotfound");
+        }
+
+        Employee employee = emp.get();
+        EmployeeDetailDTO dto = new EmployeeDetailDTO();
+        dto.setEmployeeId(employee.getEmployeeId());
+        dto.setFirstName(employee.getFirstName());
+        dto.setLastName(employee.getLastName());
+        dto.setEmail(employee.getEmail());
+        dto.setPhoneNumber(employee.getPhoneNumber());
+        dto.setHireDate(LocalDate.from(employee.getHireDate()));
+        dto.setJobId(employee.getJob().getJobId());
+        dto.setSalary(employee.getSalary());
+        dto.setCommissionPct(employee.getCommissionPct());
+        dto.setManagerId(employee.getManager().getEmployeeId());
+        dto.setDepartmentId(employee.getDepartment().getDepartmentId());
+        dto.setDocuments(employee.getDocuments());
+
+        return Optional.ofNullable(dto);
     }
 
     /**
