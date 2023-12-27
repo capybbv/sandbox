@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.somesandwich.domain.Employee;
 import org.somesandwich.repository.EmployeeRepository;
 import org.somesandwich.service.EmployeeService;
+import org.somesandwich.service.dto.UpdateJobEmployeeDTO;
 import org.somesandwich.web.rest.errors.BadRequestAlertException;
 import org.somesandwich.web.rest.errors.ElasticsearchExceptionMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -101,6 +102,38 @@ public class EmployeeResource {
     }
 
     /**
+     * {@code PATCH  /employees/:employeeId/job} :update hob
+     *
+     * @param employeeId the id of the employee to save.
+     * @param jobDetail the employee to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated employee,
+     * or with status {@code 400 (Bad Request)} if the employee is not valid,
+     * or with status {@code 404 (Not Found)} if the employee is not found,
+     * or with status {@code 500 (Internal Server Error)} if the employee couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping(value = "/{employeeId}/job", consumes = { "application/json", "application/merge-patch+json" })
+    public ResponseEntity<Employee> updateJob(
+        @PathVariable(value = "employeeId", required = false) final Long employeeId,
+        @RequestBody UpdateJobEmployeeDTO jobDetail
+    ) throws URISyntaxException {
+        log.debug("REST request to partial update Employee partially : {}, {}", employeeId, jobDetail);
+        //        if (employee.getEmployeeId() == null) {
+        //            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        //        }
+        //        if (!Objects.equals(employeeId, employee.getEmployeeId())) {
+        //            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        //        }
+
+        Optional<Employee> result = employeeService.updateJob(employeeId, jobDetail);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, employeeId.toString())
+        );
+    }
+
+    /**
      * {@code PATCH  /employees/:employeeId} : Partial updates given fields of an existing employee, field will ignore if it is null
      *
      * @param employeeId the id of the employee to save.
@@ -111,30 +144,6 @@ public class EmployeeResource {
      * or with status {@code 500 (Internal Server Error)} if the employee couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/{employeeId}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<Employee> partialUpdateEmployee(
-        @PathVariable(value = "employeeId", required = false) final Long employeeId,
-        @RequestBody Employee employee
-    ) throws URISyntaxException {
-        log.debug("REST request to partial update Employee partially : {}, {}", employeeId, employee);
-        if (employee.getEmployeeId() == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
-        }
-        if (!Objects.equals(employeeId, employee.getEmployeeId())) {
-            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
-        }
-
-        if (!employeeRepository.existsById(employeeId)) {
-            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
-        }
-
-        Optional<Employee> result = employeeService.partialUpdate(employee);
-
-        return ResponseUtil.wrapOrNotFound(
-            result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, employee.getEmployeeId().toString())
-        );
-    }
 
     /**
      * {@code GET  /employees} : get all the employees.

@@ -1,6 +1,7 @@
 package org.somesandwich.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
@@ -54,11 +55,12 @@ public class Employee implements Serializable {
     private Long commissionPct;
 
     @OneToOne
-    @MapsId
+    //    @MapsId
     @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "manager")
+    @Nullable
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @org.springframework.data.annotation.Transient
     @JsonIgnoreProperties(

@@ -145,6 +145,7 @@
     "idnull": "Invalid ID",
     "idinvalid": "Invalid ID",
     "idnotfound": "ID cannot be found",
+    "stillworking": "Employee is still working",
     "querySyntaxError": "Invalid search query",
     "file": {
       "could.not.extract": "Could not extract file",

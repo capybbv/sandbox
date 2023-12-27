@@ -1,11 +1,24 @@
 package org.somesandwich.service;
 
+import static org.hibernate.id.IdentifierGenerator.ENTITY_NAME;
+
+import java.sql.SQLException;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.somesandwich.domain.Employee;
+import org.somesandwich.domain.JobHistory;
 import org.somesandwich.repository.EmployeeRepository;
+import org.somesandwich.repository.JobHistoryRepository;
+import org.somesandwich.repository.JobRepository;
 import org.somesandwich.repository.search.EmployeeSearchRepository;
+import org.somesandwich.repository.search.JobHistorySearchRepository;
+import org.somesandwich.service.dto.UpdateJobEmployeeDTO;
+import org.somesandwich.web.rest.errors.BadRequestAlertException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,10 +35,27 @@ public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
 
+    private final JobHistoryRepository jobHistoryRepository;
+    private final JobHistorySearchRepository jobHistorySearchRepository;
+
+    private final JobRepository jobRepository;
+    private final DepartmentService departmentService;
+
     private final EmployeeSearchRepository employeeSearchRepository;
 
-    public EmployeeService(EmployeeRepository employeeRepository, EmployeeSearchRepository employeeSearchRepository) {
+    public EmployeeService(
+        EmployeeRepository employeeRepository,
+        JobHistoryRepository jobHistoryRepository,
+        JobHistorySearchRepository jobHistorySearchRepository,
+        JobRepository jobRepository,
+        DepartmentService departmentService,
+        EmployeeSearchRepository employeeSearchRepository
+    ) {
         this.employeeRepository = employeeRepository;
+        this.jobHistoryRepository = jobHistoryRepository;
+        this.jobHistorySearchRepository = jobHistorySearchRepository;
+        this.jobRepository = jobRepository;
+        this.departmentService = departmentService;
         this.employeeSearchRepository = employeeSearchRepository;
     }
 
@@ -48,8 +78,30 @@ public class EmployeeService {
      * @param employee the entity to save.
      * @return the persisted entity.
      */
+    @Transactional(rollbackFor = { SQLException.class, BadRequestAlertException.class })
     public Employee update(Employee employee) {
         log.debug("Request to update Employee : {}", employee);
+        Employee emp = employeeRepository.findById(employee.getEmployeeId()).get();
+
+        LocalDate now = LocalDate.now();
+        if (
+            employee.getDepartment() != emp.getDepartment() ||
+            employee.getJob() != emp.getJob() ||
+            !Objects.equals(employee.getSalary(), emp.getSalary())
+        ) {
+            if (jobHistoryRepository.findJobHistoryByEmployeeAndStartDate(emp, emp.getHireDate()).isPresent()) {
+                throw new BadRequestAlertException("Employee is still working", ENTITY_NAME, "stillworking");
+            }
+            JobHistory jobHis = new JobHistory()
+                .employee(emp)
+                .employeeId(emp.getEmployeeId())
+                .startDate(emp.getHireDate())
+                .endDate(Instant.now())
+                .job(emp.getJob())
+                .department(emp.getDepartment());
+            jobHistoryRepository.save(jobHis);
+            jobHistorySearchRepository.index(jobHis);
+        }
         Employee result = employeeRepository.save(employee);
         employeeSearchRepository.index(result);
         return result;
@@ -98,6 +150,64 @@ public class EmployeeService {
             });
     }
 
+    @Transactional(rollbackFor = { SQLException.class, BadRequestAlertException.class })
+    public Optional<Employee> updateJob(Long empId, UpdateJobEmployeeDTO dto) {
+        log.debug("Request to partially update Employee : {}", empId);
+
+        AtomicBoolean isUpdate = new AtomicBoolean(false);
+        Optional<Employee> emp = employeeRepository.findById(empId);
+
+        if (emp.isEmpty()) {
+            throw new BadRequestAlertException("Entity not found", "Employee", "idnotfound");
+        }
+
+        JobHistory jobHis = new JobHistory()
+            .employee(emp.get())
+            .startDate(emp.get().getHireDate())
+            .endDate(Instant.from(java.time.LocalDate.now()))
+            .job(emp.get().getJob())
+            .department(emp.get().getDepartment());
+
+        if (dto.getJobId() != null) {
+            Optional<org.somesandwich.domain.Job> job = jobRepository.findById(dto.getJobId());
+
+            if (job.isEmpty()) {
+                throw new BadRequestAlertException("Entity not found", "Job", "idnotfound");
+            }
+            if (!Objects.equals(emp.get().getJob().getJobId(), dto.getJobId())) {
+                isUpdate.set(true);
+                emp.get().setJob(job.get());
+            }
+        }
+
+        if (dto.getDepartmentId() != null) {
+            Optional<org.somesandwich.domain.Department> department = departmentService.findOne(dto.getDepartmentId());
+
+            if (department.isEmpty()) {
+                throw new BadRequestAlertException("Entity not found", "Department", "idnotfound");
+            }
+
+            if (!Objects.equals(emp.get().getDepartment().getDepartmentId(), dto.getDepartmentId())) {
+                isUpdate.set(true);
+                emp.get().setDepartment(department.get());
+            }
+        }
+
+        if (dto.getSalary() != null && !Objects.equals(dto.getSalary(), emp.get().getSalary())) {
+            isUpdate.set(true);
+            emp.get().setSalary(dto.getSalary());
+        }
+
+        if (isUpdate.get()) {
+            emp.get().setHireDate(Instant.from(java.time.LocalDate.now()));
+            employeeRepository.save(emp.get());
+            employeeSearchRepository.index(emp.get());
+            jobHistoryRepository.save(jobHis);
+        }
+
+        return emp;
+    }
+
     /**
      * Get all the employees.
      *
@@ -136,7 +246,7 @@ public class EmployeeService {
     /**
      * Search for the employee corresponding to the query.
      *
-     * @param query the query of the search.
+     * @param query    the query of the search.
      * @param pageable the pagination information.
      * @return the list of entities.
      */
