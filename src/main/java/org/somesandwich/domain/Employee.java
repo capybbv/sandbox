@@ -81,6 +81,35 @@ public class Employee implements Serializable {
     @JsonIgnoreProperties(value = { "employees", "jobHistories", "manager", "location" }, allowSetters = true)
     private Set<Department> managedDepartments = new HashSet<>();
 
+    public User getUser() {
+        return user;
+    }
+
+    public User setUser(User user) {
+        this.user = user;
+        return this.user;
+    }
+
+    public Set<Document> getDocuments() {
+        return documents;
+    }
+
+    public void setDocuments(Set<Document> documents) {
+        if (this.documents != null) {
+            this.documents.forEach(i -> i.setEmployee(null));
+        }
+        if (documents != null) {
+            documents.forEach(i -> i.setEmployee(this));
+        }
+        this.documents = documents;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @org.springframework.data.annotation.Transient
+    @JsonIgnoreProperties(value = { "employee", "documentType" }, allowSetters = true)
+    private Set<Document> documents = new HashSet<>();
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = { "employees", "jobHistories" }, allowSetters = true)
     private Job job;
