@@ -17,12 +17,15 @@
 ---
 # Conditionally disable springdoc on missing api-docs profile
 spring:
+  main:
+    allow-circular-references: true
   config:
     activate:
       on-profile: '!api-docs'
 springdoc:
   api-docs:
     enabled: false
+
 ---
 management:
   endpoints:

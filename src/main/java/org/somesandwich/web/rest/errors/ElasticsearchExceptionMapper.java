@@ -14,8 +14,7 @@ public class ElasticsearchExceptionMapper {
         if (e.getCause() instanceof UncategorizedElasticsearchException) {
             e = (UncategorizedElasticsearchException) e.getCause();
         }
-        if (e.getCause() instanceof ElasticsearchException) {
-            ElasticsearchException esException = (ElasticsearchException) e.getCause();
+        if (e.getCause() instanceof ElasticsearchException esException) {
             List<ErrorCause> rootCause = esException.response().error().rootCause();
             if (!rootCause.isEmpty()) {
                 String reason = rootCause.get(0).reason();

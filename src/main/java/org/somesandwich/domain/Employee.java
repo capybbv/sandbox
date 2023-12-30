@@ -95,12 +95,13 @@ public class Employee implements Serializable {
     }
 
     public void setDocuments(Set<Document> documents) {
-        if (this.documents != null) {
-            this.documents.forEach(i -> i.setEmployee(null));
-        }
-        if (documents != null) {
-            documents.forEach(i -> i.setEmployee(this));
-        }
+        //        if (this.documents != null) {
+        //            this.documents.forEach(i -> i.setEmployee(null));
+        //
+        //        }
+        //        if (documents != null) {
+        //            documents.forEach(i -> i.setEmployee(this));
+        //        }
         this.documents = documents;
     }
 

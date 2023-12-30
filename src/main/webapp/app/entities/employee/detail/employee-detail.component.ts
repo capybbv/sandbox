@@ -4,12 +4,13 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import SharedModule from 'app/shared/shared.module';
 import { DurationPipe, FormatMediumDatetimePipe, FormatMediumDatePipe } from 'app/shared/date';
 import { IEmployee } from '../employee.model';
+import { DocumentComponent } from 'app/entities/document/list/document.component';
 
 @Component({
   standalone: true,
   selector: 'jhi-employee-detail',
   templateUrl: './employee-detail.component.html',
-  imports: [SharedModule, RouterModule, DurationPipe, FormatMediumDatetimePipe, FormatMediumDatePipe],
+  imports: [SharedModule, RouterModule, DurationPipe, FormatMediumDatetimePipe, FormatMediumDatePipe, DocumentComponent],
 })
 export class EmployeeDetailComponent {
   @Input() employee: IEmployee | null = null;

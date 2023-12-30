@@ -1,0 +1,27 @@
+<div>
+  <h2>Documents</h2>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Name</th>
+          <th>File</th>
+          <th>Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let document of documents">
+          <td>{{ document.id }}</td>
+          <td>{{ document.name }}</td>
+          <td>{{ document.file }}</td>
+          <td>
+            <button class="btn btn-primary" (click)="edit(document.id)">Edit</button>
+            <button class="btn btn-danger" (click)="delete(document.id)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <button class="btn btn-primary" (click)="create()">Create</button>
+</div>

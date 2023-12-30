@@ -187,7 +187,7 @@ public class RegionResource {
      * @param pageable the pagination information.
      * @return the result of the search.
      */
-    @GetMapping("/_search")
+    @GetMapping("/search")
     public ResponseEntity<List<Region>> searchRegions(
         @RequestParam("query") String query,
         @org.springdoc.core.annotations.ParameterObject Pageable pageable

@@ -12,7 +12,7 @@ import org.springframework.test.context.ContextCustomizerFactory;
 
 public class TestContainersSpringContextCustomizerFactory implements ContextCustomizerFactory {
 
-    private Logger log = LoggerFactory.getLogger(TestContainersSpringContextCustomizerFactory.class);
+    private final Logger log = LoggerFactory.getLogger(TestContainersSpringContextCustomizerFactory.class);
 
     private static ElasticsearchTestContainer elasticsearchBean;
 
