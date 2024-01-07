@@ -1,0 +1,2 @@
+src/test/java/org/somesandwich/domain/DepartmentTestSamples.java skip
+src/test/java/org/somesandwich/web/rest/RegionResourceIT.java skip

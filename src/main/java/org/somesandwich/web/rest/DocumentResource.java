@@ -2,6 +2,7 @@ package org.somesandwich.web.rest;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -72,5 +73,11 @@ public class DocumentResource {
         Page<Document> result = documentService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), result);
         return ResponseEntity.ok().headers(headers).body(result.getContent());
+    }
+
+    @GetMapping("/employee/{employeeId}")
+    public ResponseEntity<List<Document>> getAllDocumentByEmployeeId(@PathVariable Long employeeId) {
+        List<Document> result = documentService.findAllByEmployeeId(employeeId);
+        return ResponseEntity.ok().body(result);
     }
 }

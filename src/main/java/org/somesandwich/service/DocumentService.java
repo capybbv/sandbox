@@ -1,10 +1,13 @@
 package org.somesandwich.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.somesandwich.domain.Document;
 import org.somesandwich.domain.DocumentType;
+import org.somesandwich.domain.Employee;
 import org.somesandwich.repository.DocumentRepository;
 import org.somesandwich.repository.DocumentTypeRepository;
 import org.somesandwich.repository.EmployeeRepository;
@@ -85,7 +88,6 @@ public class DocumentService {
     }
 
     /**
-     *
      * Get one document by id.
      *
      * @param id the id of the entity.
@@ -112,5 +114,17 @@ public class DocumentService {
         log.debug("Request to delete Document : {}", documentId);
         documentRepository.deleteById(documentId);
         documentSearchRepository.deleteById(documentId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Document> findAllByEmployeeId(Long employeeId) {
+        log.debug("Request to get all Documents");
+
+        Optional<Employee> emp = employeeRepository.findById(employeeId);
+        if (emp.isPresent()) {
+            return documentRepository.findAllByEmployee(emp.get());
+        } else {
+            return new ArrayList<Document>();
+        }
     }
 }

@@ -20,6 +20,7 @@ paginate * with pagination
 service * with serviceClass
 
 entity Employee {
+
   @Id employeeId Long
   firstName String
   lastName String

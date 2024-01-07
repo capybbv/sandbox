@@ -66,6 +66,8 @@ public class EmployeeService {
      * @return the persisted entity.
      */
     public Employee save(Employee employee) {
+        //before save
+
         log.debug("Request to save Employee : {}", employee);
         Employee result = employeeRepository.save(employee);
         employeeSearchRepository.index(result);
@@ -81,26 +83,26 @@ public class EmployeeService {
     @Transactional(rollbackFor = { SQLException.class, BadRequestAlertException.class })
     public Employee update(Employee employee) {
         log.debug("Request to update Employee : {}", employee);
-        Employee emp = employeeRepository.findById(employee.getEmployeeId()).get();
+        Employee existing_employee = employeeRepository.findById(employee.getEmployeeId()).get();
 
         LocalDate now = LocalDate.now();
         if (
-            employee.getDepartment() != emp.getDepartment() ||
-            employee.getJob() != emp.getJob() ||
-            !Objects.equals(employee.getSalary(), emp.getSalary())
+            employee.getDepartment() != existing_employee.getDepartment() ||
+            employee.getJob() != existing_employee.getJob() ||
+            !Objects.equals(employee.getSalary(), existing_employee.getSalary())
         ) {
-            if (jobHistoryRepository.findJobHistoryByEmployeeAndStartDate(emp, emp.getHireDate()).isPresent()) {
+            if (jobHistoryRepository.findJobHistoryByEmployeeAndStartDate(existing_employee, existing_employee.getHireDate()).isPresent()) {
                 throw new BadRequestAlertException("Employee is still working", ENTITY_NAME, "stillworking");
             }
             JobHistory jobHis = new JobHistory()
-                .employee(emp)
-                .employeeId(emp.getEmployeeId())
-                .startDate(emp.getHireDate())
+                .employee(existing_employee)
+                .employeeId(existing_employee.getEmployeeId())
+                .startDate(existing_employee.getHireDate())
                 .endDate(Instant.now())
-                .job(emp.getJob())
-                .department(emp.getDepartment());
+                .job(existing_employee.getJob())
+                .department(existing_employee.getDepartment());
             jobHistoryRepository.save(jobHis);
-            jobHistorySearchRepository.index(jobHis);
+            // jobHistorySearchRepository.index(jobHis);
         }
         Employee result = employeeRepository.save(employee);
         employeeSearchRepository.index(result);

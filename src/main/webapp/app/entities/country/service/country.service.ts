@@ -25,7 +25,7 @@ export class CountryService {
     protected applicationConfigService: ApplicationConfigService,
   ) {}
 
-  create(country: NewCountry): Observable<EntityResponseType> {
+  create(country: ICountry): Observable<EntityResponseType> {
     return this.http.post<ICountry>(this.resourceUrl, country, { observe: 'response' });
   }
 

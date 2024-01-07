@@ -1,27 +1,38 @@
 <div>
-  <h2>Documents</h2>
-  <div class="table-responsive">
-    <table class="table table-striped">
+  <div class="row">
+    <h3>List Documents</h3>
+  </div>
+
+  <div>
+    <table class="table table-striped table-bordered">
       <thead>
         <tr>
-          <th>Id</th>
-          <th>Name</th>
-          <th>File</th>
-          <th>Created</th>
+          <th>Document Id</th>
+          <th>Document Name</th>
+          <th>Document Type Id</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let document of documents">
-          <td>{{ document.id }}</td>
-          <td>{{ document.name }}</td>
-          <td>{{ document.file }}</td>
+          <td>{{ document.documentId }}</td>
+          <td>{{ document.documentName }}</td>
+          <td>{{ document.documentType?.documentTypeId }}</td>
           <td>
-            <button class="btn btn-primary" (click)="edit(document.id)">Edit</button>
-            <button class="btn btn-danger" (click)="delete(document.id)">Delete</button>
+            <button (click)="update(document.documentId)" class="btn btn-primary">Update</button>
+            <button (click)="delete(document.documentId)" class="btn btn-danger" style="margin-left: 10px">Delete</button>
+            <button (click)="(document.documentId)" class="btn btn-primary" style="margin-left: 10px">View</button>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
-  <button class="btn btn-primary" (click)="create()">Create</button>
+  <div>
+    <button (click)="create()" class="btn btn-primary">Create</button>
+    <jhi-document-update
+      [employeeId]="employeeId"
+      [(isShowModal)]="isShowModal"
+      [selectedDocumentId]="selectedDocumentId"
+    ></jhi-document-update>
+  </div>
 </div>

@@ -2,6 +2,8 @@ package org.somesandwich.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import java.io.Serial;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,8 +21,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Document {
+public class Document implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -42,65 +45,6 @@ public class Document {
     @JsonIgnoreProperties(value = { "documents" }, allowSetters = true)
     private Employee employee;
 
-    //    public Document(Long documentId, String documentName, DocumentType documentType, Employee employee) {
-    //        this.documentId = documentId;
-    //        this.documentName = documentName;
-    //        this.documentType = documentType;
-    //        this.employee = employee;
-    //    }
-    //
-    //    public Document() {}
-    //
-    //    public Long getDocumentId() {
-    //        return documentId;
-    //    }
-    //
-    //    public Document setDocumentId(Long documentId) {
-    //        this.documentId = documentId;
-    //        return this;
-    //    }
-    //
-    //    public String getDocumentName() {
-    //        return documentName;
-    //    }
-    //
-    //    public Document setDocumentName(String documentName) {
-    //        this.documentName = documentName;
-    //        return this;
-    //    }
-    //
-    //    public DocumentType getDocumentType() {
-    //        return documentType;
-    //    }
-    //
-    //    public void setDocumentType(DocumentType documentType) {
-    //        if (this.documentType != null) {
-    //            this.documentType.getDocuments().remove(this);
-    //        }
-    //
-    //        this.documentType = documentType;
-    //
-    //        if (this.documentType != null) {
-    //            this.documentType.getDocuments().add(this);
-    //        }
-    //    }
-    //
-    //    public Employee getEmployee() {
-    //        return employee;
-    //    }
-    //
-    //    public void setEmployee(Employee employee) {
-    //        if (this.employee != null) {
-    //            this.employee.getDocuments().remove(this);
-    //        }
-    //
-    //        this.employee = employee;
-    //
-    //        if (this.employee != null) {
-    //            this.employee.getDocuments().add(this);
-    //        }
-    //    }
-
     @Override
     public int hashCode() {
         return getClass().hashCode();
@@ -108,8 +52,12 @@ public class Document {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof Document)) return false;
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof Document)) {
+            return false;
+        }
 
         return documentId != null && documentId.equals(((Document) obj).documentId);
     }
@@ -123,10 +71,10 @@ public class Document {
             ", documentName='" +
             documentName +
             '\'' +
-            ", documentType=" +
-            documentType +
-            ", employee=" +
-            employee +
+            ", documentTypeId=" +
+            documentType.getDocumentTypeId() +
+            ", employeeId=" +
+            employee.getEmployeeId() +
             '}'
         );
     }

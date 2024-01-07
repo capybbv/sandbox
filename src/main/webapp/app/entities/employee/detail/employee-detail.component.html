@@ -68,9 +68,7 @@
             }
           </dd>
         </dl>
-        <div>
-          <jhi-document-list></jhi-document-list>
-        </div>
+        <jhi-document-list [employeeId]="employee.employeeId!"></jhi-document-list>
 
         <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
           <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
@@ -79,9 +77,6 @@
         <button type="button" [routerLink]="['/employee', employee.employeeId, 'edit']" class="btn btn-primary">
           <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
         </button>
-        <!-- <button type="button" (click)="" class="btn btn-primary">
-                                  <fa-icon icon="trash"></fa-icon>&nbsp;<span jhiTranslate="entity.action.delete">Delete</span>
-                                </button> -->
       </div>
     }
   </div>

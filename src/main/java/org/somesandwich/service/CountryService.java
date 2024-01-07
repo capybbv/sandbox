@@ -1,6 +1,11 @@
 package org.somesandwich.service;
 
+import jakarta.persistence.criteria.ListJoin;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Optional;
+import lombok.val;
+import org.hibernate.mapping.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.somesandwich.domain.Country;
@@ -90,7 +95,8 @@ public class CountryService {
     @Transactional(readOnly = true)
     public Page<Country> findAll(Pageable pageable) {
         log.debug("Request to get all Countries");
-        return countryRepository.findAll(pageable);
+        Page<Country> result = countryRepository.findAll(pageable);
+        return result;
     }
 
     /**
@@ -126,6 +132,15 @@ public class CountryService {
     @Transactional(readOnly = true)
     public Page<Country> search(String query, Pageable pageable) {
         log.debug("Request to search for a page of Countries for query {}", query);
-        return countrySearchRepository.search(query, pageable);
+        Page<Country> result = countrySearchRepository.search(query, pageable);
+
+        java.util.List<Country> countries = countryRepository.findAll();
+
+        result.forEach(country -> {
+            country.setCountryName(
+                countries.stream().filter(c -> c.getCountryId().equals(country.getCountryId())).findFirst().get().getCountryName()
+            );
+        });
+        return result;
     }
 }

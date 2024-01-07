@@ -118,13 +118,21 @@ public class RegionService {
     /**
      * Search for the region corresponding to the query.
      *
-     * @param query the query of the search.
+     * @param query    the query of the search.
      * @param pageable the pagination information.
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
     public Page<Region> search(String query, Pageable pageable) {
         log.debug("Request to search for a page of Regions for query {}", query);
-        return regionSearchRepository.search(query, pageable);
+        Page<Region> result = regionSearchRepository.search(query, pageable);
+        java.util.List<Region> regions = regionRepository.findAll();
+        result.forEach(region ->
+            region.setRegionName(
+                regions.stream().filter(x -> x.getRegionId().equals(region.getRegionId())).findFirst().get().getRegionName()
+            )
+        );
+
+        return result;
     }
 }

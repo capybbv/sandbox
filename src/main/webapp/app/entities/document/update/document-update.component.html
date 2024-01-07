@@ -1,0 +1,61 @@
+<div>
+  <ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Add new document for employee</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="dismissModal()"></button>
+    </div>
+    <div class="modal-body">
+      <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="mb-3">
+            <label class="form-label">Document Type</label>
+            <select
+              formControlName="documentType"
+              class="form-control"
+              data-cy="documentType"
+              name="documentType"
+              [ngClass]="{ 'is-invalid': submitted && f.documentType.errors }"
+            >
+              @for (dt of documentTypesSharedCollection; track $index) {
+                <option [ngValue]="dt">{{ dt.documentTypeName }}</option>
+              }
+            </select>
+            <div *ngIf="submitted && f.documentType.errors" class="invalid-feedback">
+              <div *ngIf="f.documentType.errors.required">Document type is required</div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Document Name</label>
+            <input
+              type="text"
+              class="form-control"
+              name="documentName"
+              id="documentName"
+              data-cy="documentName"
+              formControlName="documentName"
+              [ngClass]="{ 'is-invalid': submitted && f.documentName.errors }"
+            />
+            <div *ngIf="submitted && f.documentName.errors" class="invalid-feedback">
+              <div *ngIf="f.documentName.errors.required">Document Name is required</div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <button [disabled]="loading" (click)="onSubmit()" class="btn btn-primary">
+            <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+            Save
+          </button>
+          <button class="btn btn-primary" (click)="dismissModal()">
+            <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+            Cancel
+          </button>
+        </div>
+      </form>
+      <div *ngIf="loading" class="text-center m-5">
+        <span class="spinner-border spinner-border-lg align-center"></span>
+      </div>
+    </div>
+  </ng-template>
+
+  <hr />
+</div>

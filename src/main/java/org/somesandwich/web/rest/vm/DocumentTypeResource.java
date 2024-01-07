@@ -59,4 +59,11 @@ public class DocumentTypeResource {
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), result);
         return ResponseEntity.ok().headers(headers).body(result.getContent());
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<DocumentType>> getAllDocumentType() throws URISyntaxException {
+        log.debug("REST request to get all DocumentType");
+        List<DocumentType> result = documentTypeService.findAll();
+        return ResponseEntity.ok().body(result);
+    }
 }

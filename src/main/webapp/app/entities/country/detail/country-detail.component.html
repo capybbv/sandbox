@@ -23,7 +23,7 @@
           <dd>
             @if (country.region) {
               <div>
-                <a [routerLink]="['/region', country.region.regionId, 'view']">{{ country.region.regionId }}</a>
+                <a [routerLink]="['/region', country.region.regionId, 'view']">{{ country.region.regionName }}</a>
               </div>
             }
           </dd>

@@ -1,5 +1,6 @@
 package org.somesandwich.service;
 
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.somesandwich.domain.DocumentType;
@@ -52,6 +53,11 @@ public class DocumentTypeService {
     public Page<DocumentType> findAll(Pageable pageable) {
         log.debug("Request to get all DocumentTypes");
         return documentTypeRepository.findAll(pageable);
+    }
+
+    public List<DocumentType> findAll() {
+        log.debug("Request to get all DocumentTypes");
+        return documentTypeRepository.findAll();
     }
 
     public DocumentType findOne(Long documentTypeId) {

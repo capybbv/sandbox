@@ -20,6 +20,7 @@ import { CountryFormService, CountryFormGroup } from './country-form.service';
   imports: [SharedModule, FormsModule, ReactiveFormsModule],
 })
 export class CountryUpdateComponent implements OnInit {
+  isCreate = true;
   isSaving = false;
   country: ICountry | null = null;
 
@@ -40,6 +41,7 @@ export class CountryUpdateComponent implements OnInit {
     this.activatedRoute.data.subscribe(({ country }) => {
       this.country = country;
       if (country) {
+        this.isCreate = false;
         this.updateForm(country);
       }
 
@@ -52,12 +54,33 @@ export class CountryUpdateComponent implements OnInit {
   }
 
   save(): void {
+    // this.isSaving = true;
+    // const country = this.countryFormService.getCountry(this.editForm);
+    // if (country.countryId !== null) {
+    //   this.subscribeToSaveResponse(this.countryService.update(country));
+    // } else {
+    //   this.subscribeToSaveResponse(this.countryService.create(country));
+    // }
+    if (this.isCreate) {
+      this.createCountry();
+    } else {
+      this.updateCountry();
+    }
+  }
+
+  createCountry(): void {
+    this.isSaving = true;
+    const country = this.countryFormService.getCountry(this.editForm);
+    if (country.countryId !== null) {
+      this.subscribeToSaveResponse(this.countryService.create(country));
+    }
+  }
+
+  updateCountry(): void {
     this.isSaving = true;
     const country = this.countryFormService.getCountry(this.editForm);
     if (country.countryId !== null) {
       this.subscribeToSaveResponse(this.countryService.update(country));
-    } else {
-      this.subscribeToSaveResponse(this.countryService.create(country));
     }
   }
 

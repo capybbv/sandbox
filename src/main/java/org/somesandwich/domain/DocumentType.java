@@ -10,6 +10,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.AllArgsConstructor;
@@ -29,8 +31,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DocumentType {
+public class DocumentType implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -50,61 +53,15 @@ public class DocumentType {
     @JsonIgnoreProperties(value = { "employee, documentType" }, allowSetters = true)
     private Set<Document> documents = new HashSet<>();
 
-    //
-    //    public DocumentType(Long documentTypeId, String documentTypeName, Set<Document> documents) {
-    //        this.documentTypeId = documentTypeId;
-    //        this.documentTypeName = documentTypeName;
-    //        this.documents = documents;
-    //    }
-    //
-    //    public DocumentType() {}
-    //
-    //    public Long getDocumentTypeId() {
-    //        return this.documentTypeId;
-    //    }
-    //
-    //    public DocumentType setDocumentTypeId(Long documentTypeId) {
-    //        this.documentTypeId = documentTypeId;
-    //        return this;
-    //    }
-    //
-    //    public String getDocumentTypeName() {
-    //        return this.documentTypeName;
-    //    }
-    //
-    //    public DocumentType setDocumentTypeName(String documentTypeName) {
-    //        this.documentTypeName = documentTypeName;
-    //        return this;
-    //    }
-    //
-    //    public Set<Document> getDocuments() {
-    //        return this.documents;
-    //    }
-    //
-    //    public void setDocuments(Set<Document> documents) {
-    //        if (this.documents != null) {
-    //            this.documents.forEach(i -> i.setDocumentType(null));
-    //        }
-    //
-    //        if (documents != null) {
-    //            documents.forEach(i -> i.setDocumentType(this));
-    //        }
-    //
-    //        this.documents = documents;
-    //    }
-
     @Override
     public String toString() {
         return (
-            "DocumentType{" +
-            "documentTypeId=" +
-            documentTypeId +
-            ", documentTypeName='" +
-            documentTypeName +
-            '\'' +
-            ", documents=" +
-            documents +
-            '}'
+            "DocumentType{" + "documentTypeId=" + documentTypeId + ", documentTypeName='" + documentTypeName
+            //                +
+            //                '\'' +
+            //                ", documents=" +
+            //                documents +
+            //                '}'
         );
     }
 
